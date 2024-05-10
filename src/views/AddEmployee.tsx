@@ -186,8 +186,8 @@ const AddEmployee = () => {
                     type="checkbox"
                     name="course"
                     className="ms-2"
-                    value="msc"
-                    checked={employ.course.includes("msc")}
+                    value=" msc"
+                    checked={employ.course.includes(" msc")}
                     onChange={handleChange}
                   />
                 </label>
@@ -197,9 +197,9 @@ const AddEmployee = () => {
                   <input
                     type="checkbox"
                     name="course"
-                    value="bsc"
+                    value=" bsc"
                     className="ms-2"
-                    checked={employ.course.includes("bsc")}
+                    checked={employ.course.includes(" bsc")}
                     onChange={handleChange}
                   />
                 </label>
@@ -209,8 +209,8 @@ const AddEmployee = () => {
                     type="checkbox"
                     name="course"
                     className="ms-2"
-                    value="bca"
-                    checked={employ.course.includes("bca")}
+                    value=" bca"
+                    checked={employ.course.includes(" bca")}
                     onChange={handleChange}
                   />
                 </label>

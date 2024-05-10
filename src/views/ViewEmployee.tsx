@@ -77,7 +77,6 @@ const ViewEmployee = () => {
     console.log(results);
     console.log("result:", results.data);
     setMsg(results.data);
-
     ListEmployee(1);
   };
   const handleInputChange = (event: any) => {
