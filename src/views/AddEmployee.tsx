@@ -1,13 +1,22 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
 
+interface Empl {
+  name: string;
+  email: string;
+  mobile: string;
+  designation: string;
+  course: string[];
+  gender: string;
+}
+
 const AddEmployee = () => {
-  const [employ, setEmploy] = useState({
+  const [employ, setEmploy] = useState<Empl>({
     name: "",
     email: "",
     mobile: "",
     designation: "",
-    course: [""],
+    course: [],
     gender: "",
   });
 
