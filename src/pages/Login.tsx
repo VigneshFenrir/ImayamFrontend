@@ -16,10 +16,13 @@ const Login = () => {
 
     async function loginCheck() {
       try {
-        console.log("hiiiii");
-        let result = await axios.post("http://localhost:6001/login", login);
+        let result = await axios.post("http://localhost:5000/login", login);
         console.log(result);
-        setMsg(result.data);
+        setMsg(result.data.message);
+        if (result.data.token) {
+          localStorage.setItem("token", result.data.token);
+          localStorage.setItem("role", result.data.role);
+        }
         navigate("/dashboard");
       } catch (err: any) {
         console.log(err);

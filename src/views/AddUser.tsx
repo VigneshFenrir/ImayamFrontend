@@ -1,8 +1,7 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
-const Register = () => {
+const AddUser = () => {
   const [user, setUser] = useState({
     username: "",
     role: "",
@@ -11,7 +10,6 @@ const Register = () => {
   });
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const reg = (e: FormEvent) => {
     e.preventDefault();
@@ -22,7 +20,6 @@ const Register = () => {
     }
     async function userCheck() {
       try {
-        console.log("hiiiii");
         let result = await axios.post("http://localhost:5000/users", {
           username: user.username,
           role: user.role,
@@ -30,7 +27,12 @@ const Register = () => {
         });
         console.log(result);
         setMsg(result.data);
-        navigate("/");
+        setUser({
+          username: "",
+          role: "",
+          password: "",
+          confirm_password: "",
+        });
       } catch (err: any) {
         console.log(err);
         setError(err.response.data);
@@ -47,7 +49,7 @@ const Register = () => {
   return (
     <>
       <div className="container  border my-5 py-3 rounded">
-        <h1 className="text-center my-3">Sign In</h1>
+        <h1 className="text-center my-3">Add User</h1>
         <form action="post" onSubmit={reg}>
           <div className="row flex-column align-items-center">
             <div className="form-group col-5">
@@ -112,16 +114,9 @@ const Register = () => {
             </div>
           </div>
         </form>
-        <div className="row">
-          <div className="text-end">
-            <Link className="btn btn-info text-white me-4" to={"/"}>
-              Log In
-            </Link>
-          </div>
-        </div>
       </div>
     </>
   );
 };
 
-export default Register;
+export default AddUser;

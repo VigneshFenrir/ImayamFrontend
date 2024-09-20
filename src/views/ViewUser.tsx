@@ -3,42 +3,36 @@ import { FormEvent, useEffect, useState } from "react";
 import { FaMessage, FaTrash } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
-interface Employ {
+interface User {
   _id: string;
-  name: string;
-  email: string;
-  mobile: number;
-  designation: string;
-  course: string;
-  gender: string;
-  Date: string;
+  username: string;
+  role: string;
 }
-const ViewEmployee = () => {
-  const [employ, setEmploy] = useState<Employ[]>([]);
-  const [Currentemploye, setCurrentemploye] = useState("");
+const ViewUser = () => {
+  const [user, setuser] = useState<User[]>([]);
+  const [Currentuser, setCurrentuser] = useState("");
   const [msg, setMsg] = useState();
   const [error, setError] = useState("");
   const [pageLinks, setPagelinks] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalitem, setTotalitem] = useState("");
   const [query, setQuery] = useState("");
+  const userRole = localStorage.getItem("role");
   const usersPerPage = 10;
   var pageRange = [];
   useEffect(() => {
-    ListEmployee(1);
+    Listuser(1);
     pagination();
   }, []);
 
   const pageLinkClick = (page: number) => {
-    ListEmployee(page);
+    Listuser(page);
   };
 
   //pagination
   async function pagination() {
     try {
-      let totalCount = await axios.get(
-        "http://localhost:6001/employee/employeeTotal"
-      );
+      let totalCount = await axios.get("http://localhost:5000/users/userTotal");
       const totalitems = totalCount.data;
       setTotalitem(totalCount.data);
 
@@ -52,60 +46,60 @@ const ViewEmployee = () => {
     }
   }
 
-  async function ListEmployee(page: number) {
+  async function Listuser(page: number) {
     try {
       setCurrentPage(page);
       console.log(query);
       let Emp = await axios.get(
-        `http://localhost:6001/employee?page=${page}&search=${query}`
+        `http://localhost:5000/users?page=${page}&search=${query}`
       );
       console.log(Emp);
-      setEmploy(Emp.data);
+      setuser(Emp.data);
     } catch (err: any) {
       console.log(err.message);
       setError(err.message);
     }
   }
   const handledelete = (user: any) => {
-    setCurrentemploye(user);
+    setCurrentuser(user);
     deleteitem();
   };
   const deleteitem = async () => {
     let results = await axios.delete(
-      "http://localhost:6001/employee/delete" + Currentemploye
+      "http://localhost:5000/users/delete" + Currentuser
     );
     console.log(results);
     console.log("result:", results.data);
     setMsg(results.data);
-    ListEmployee(1);
+    Listuser(1);
   };
   const handleInputChange = (event: any) => {
-    // event.preventdefault();
     setQuery(event.target.value);
     console.log(event.target.value);
     if (!event.target.value) {
       console.log("if");
-      //   setQuery("");
-      ListEmployee(1);
+      Listuser(1);
     }
   };
   const searchofbatch = (e: FormEvent) => {
     e.preventDefault();
     console.log(query);
-    ListEmployee(1);
+    Listuser(1);
   };
-
+  console.log(userRole, "check");
   return (
     <>
       <div className="border">
         <div className="container ">
-          <h2 className="text-center">Employee</h2>
-          <div className="row">
-            <div className="col-4 p-3 align-self-center">
-              <Link className="btn btn-info " to={"/dashboard/employee/add"}>
-                Create Employee
-              </Link>
-            </div>
+          <h2 className="text-center">Users</h2>
+          <div className="row justify-content-between">
+            {(userRole === "admin" || userRole === "editor") && (
+              <div className="col-4 p-3 align-self-center">
+                <Link className="btn btn-info " to={"/dashboard/user/add"}>
+                  Create User
+                </Link>
+              </div>
+            )}
             <div className="col-4 p-3 align-self-end">
               <div className="">
                 <form
@@ -123,7 +117,7 @@ const ViewEmployee = () => {
               </div>
             </div>
             <div className="col-4  p-3">
-              <div className="h3 text-end">Total Employees -{totalitem}</div>
+              <div className="h3 text-end">Total Users : {totalitem}</div>
             </div>
           </div>
         </div>
@@ -134,43 +128,38 @@ const ViewEmployee = () => {
             <thead>
               <tr>
                 <th className="text-center">Unique Id</th>
-                <th className="text-center">Name</th>
-                <th className="text-center">E-mail</th>
-                <th className="text-center">Mobile No.</th>
-                <th className="text-center">Desigination</th>
-                <th className="text-center">Gender</th>
-                <th className="text-center">Course</th>
-                <th className="text-center">Create Date</th>
-                <th className="text-center">Action</th>
+                <th className="text-center">UserName</th>
+                <th className="text-center">Role</th>
+
+                {(userRole === "admin" || userRole === "editor") && (
+                  <th className="text-center">Action</th>
+                )}
               </tr>
             </thead>
             <tbody>
-              {employ.map((employe) => (
-                <tr key={employe._id}>
-                  <td className="text-center">{employe._id}</td>
-                  <td className="text-center">{employe.name}</td>
-                  <td className="text-center">{employe.email}</td>
-                  <td className="text-center">{employe.mobile}</td>
-                  <td className="text-center">{employe.designation}</td>
-                  <td className="text-center">{employe.gender}</td>
-                  <td className="text-center">{employe.course}</td>
-                  <td className="text-center">{employe.Date}</td>
+              {user.map((user) => (
+                <tr key={user._id}>
+                  <td className="text-center">{user._id}</td>
+                  <td className="text-center">{user.username}</td>
+                  <td className="text-center">{user.role}</td>
 
-                  <td className="text-center">
-                    <Link
-                      to={`/dashboard/employee/edit/${employe._id}`}
-                      className="text-start me-2"
-                    >
-                      <FaMessage />
-                    </Link>
-                    <Link
-                      to={""}
-                      className="text-end ms-2"
-                      onClick={() => handledelete(employe._id)}
-                    >
-                      <FaTrash color="red" />
-                    </Link>
-                  </td>
+                  {(userRole === "admin" || userRole === "editor") && (
+                    <td className="text-center">
+                      <Link
+                        to={`/dashboard/user/edit/${user._id}`}
+                        className="text-start me-2"
+                      >
+                        <FaMessage />
+                      </Link>
+                      <Link
+                        to={""}
+                        className="text-end ms-2"
+                        onClick={() => handledelete(user._id)}
+                      >
+                        <FaTrash color="red" />
+                      </Link>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -194,4 +183,4 @@ const ViewEmployee = () => {
   );
 };
 
-export default ViewEmployee;
+export default ViewUser;

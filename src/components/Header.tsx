@@ -4,9 +4,9 @@ const Header = () => {
   const navigate = useNavigate();
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-danger text-white p-3 ">
+      <nav className="navbar navbar-expand-lg navbar-light bg-info text-white p-3 ">
         <a className="navbar-brand text-white" href="#">
-          DealsDray
+          Emayam
         </a>
 
         <div
@@ -21,11 +21,8 @@ const Header = () => {
             </li>
 
             <li className="nav-item">
-              <Link
-                to={"/dashboard/employee/view"}
-                className="nav-link text-white"
-              >
-                Employee
+              <Link to={"/dashboard/user/view"} className="nav-link text-white">
+                users
               </Link>
             </li>
           </ul>
